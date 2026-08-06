@@ -1,0 +1,3 @@
+# Persist unacknowledged Alerts
+
+Within the retention limits defined by ADR-0008, OpsBeacon stores displayed, unacknowledged Alerts and Pending Alerts locally, restoring the one open Toast after relaunch and resuming each active Collection Window from its durable deadline—or delivering immediately when that deadline has passed—without rematching. This prevents quitting or crashing from acting as implicit Acknowledgement or losing retained matches, but keeps their original source messages on disk until Acknowledgement permanently removes them; the original Sources remain the records of truth, and no acknowledged history is kept.
