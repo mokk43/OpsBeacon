@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 77;
+	objectVersion = 71;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -37,39 +37,9 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		A10000000000000000000061 /* OpsBeacon */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-			);
-			explicitFileTypes = {
-			};
-			explicitFolders = (
-			);
-			path = OpsBeacon;
-			sourceTree = "<group>";
-		};
-		A10000000000000000000062 /* OpsBeaconTests */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-			);
-			explicitFileTypes = {
-			};
-			explicitFolders = (
-			);
-			path = OpsBeaconTests;
-			sourceTree = "<group>";
-		};
-		A10000000000000000000063 /* OpsBeaconUITests */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-			);
-			explicitFileTypes = {
-			};
-			explicitFolders = (
-			);
-			path = OpsBeaconUITests;
-			sourceTree = "<group>";
-		};
+		A10000000000000000000061 /* OpsBeacon */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = OpsBeacon; sourceTree = "<group>"; };
+		A10000000000000000000062 /* OpsBeaconTests */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = OpsBeaconTests; sourceTree = "<group>"; };
+		A10000000000000000000063 /* OpsBeaconUITests */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = OpsBeaconUITests; sourceTree = "<group>"; };
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -84,8 +54,20 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		A10000000000000000000072 /* Frameworks */ = {isa = PBXFrameworksBuildPhase; buildActionMask = 2147483647; files = (); runOnlyForDeploymentPostprocessing = 0; };
-		A10000000000000000000073 /* Frameworks */ = {isa = PBXFrameworksBuildPhase; buildActionMask = 2147483647; files = (); runOnlyForDeploymentPostprocessing = 0; };
+		A10000000000000000000072 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A10000000000000000000073 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -120,8 +102,10 @@
 				A10000000000000000000071 /* Frameworks */,
 				A10000000000000000000075 /* Resources */,
 			);
-			buildRules = ();
-			dependencies = ();
+			buildRules = (
+			);
+			dependencies = (
+			);
 			fileSystemSynchronizedGroups = (
 				A10000000000000000000061 /* OpsBeacon */,
 			);
@@ -144,9 +128,14 @@
 				A10000000000000000000072 /* Frameworks */,
 				A10000000000000000000077 /* Resources */,
 			);
-			buildRules = ();
-			dependencies = (A10000000000000000000043 /* PBXTargetDependency */);
-			fileSystemSynchronizedGroups = (A10000000000000000000062 /* OpsBeaconTests */);
+			buildRules = (
+			);
+			dependencies = (
+				A10000000000000000000043 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				A10000000000000000000062 /* OpsBeaconTests */,
+			);
 			name = OpsBeaconTests;
 			productName = OpsBeaconTests;
 			productReference = A10000000000000000000052 /* OpsBeaconTests.xctest */;
@@ -160,9 +149,14 @@
 				A10000000000000000000073 /* Frameworks */,
 				A10000000000000000000079 /* Resources */,
 			);
-			buildRules = ();
-			dependencies = (A10000000000000000000044 /* PBXTargetDependency */);
-			fileSystemSynchronizedGroups = (A10000000000000000000063 /* OpsBeaconUITests */);
+			buildRules = (
+			);
+			dependencies = (
+				A10000000000000000000044 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				A10000000000000000000063 /* OpsBeaconUITests */,
+			);
 			name = OpsBeaconUITests;
 			productName = OpsBeaconUITests;
 			productReference = A10000000000000000000053 /* OpsBeaconUITests.xctest */;
@@ -178,18 +172,31 @@
 				LastSwiftUpdateCheck = 2630;
 				LastUpgradeCheck = 2630;
 				TargetAttributes = {
-					A10000000000000000000011 = { CreatedOnToolsVersion = 26.3; };
-					A10000000000000000000012 = { CreatedOnToolsVersion = 26.3; TestTargetID = A10000000000000000000011; };
-					A10000000000000000000013 = { CreatedOnToolsVersion = 26.3; TestTargetID = A10000000000000000000011; };
+					A10000000000000000000011 = {
+						CreatedOnToolsVersion = 26.3;
+					};
+					A10000000000000000000012 = {
+						CreatedOnToolsVersion = 26.3;
+						TestTargetID = A10000000000000000000011;
+					};
+					A10000000000000000000013 = {
+						CreatedOnToolsVersion = 26.3;
+						TestTargetID = A10000000000000000000011;
+					};
 				};
 			};
 			buildConfigurationList = A10000000000000000000080 /* Build configuration list for PBXProject "OpsBeacon" */;
 			compatibilityVersion = "Xcode 16.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
-			knownRegions = (en, Base);
+			knownRegions = (
+				en,
+				Base,
+			);
 			mainGroup = A10000000000000000000002;
-			packageReferences = (A10000000000000000000020 /* XCRemoteSwiftPackageReference "swift-nio" */);
+			packageReferences = (
+				A10000000000000000000020 /* XCRemoteSwiftPackageReference "swift-nio" */,
+			);
 			productRefGroup = A10000000000000000000003 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -202,49 +209,245 @@
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		A10000000000000000000075 /* Resources */ = {isa = PBXResourcesBuildPhase; buildActionMask = 2147483647; files = (); runOnlyForDeploymentPostprocessing = 0; };
-		A10000000000000000000077 /* Resources */ = {isa = PBXResourcesBuildPhase; buildActionMask = 2147483647; files = (); runOnlyForDeploymentPostprocessing = 0; };
-		A10000000000000000000079 /* Resources */ = {isa = PBXResourcesBuildPhase; buildActionMask = 2147483647; files = (); runOnlyForDeploymentPostprocessing = 0; };
+		A10000000000000000000075 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A10000000000000000000077 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A10000000000000000000079 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		A10000000000000000000074 /* Sources */ = {isa = PBXSourcesBuildPhase; buildActionMask = 2147483647; files = (); runOnlyForDeploymentPostprocessing = 0; };
-		A10000000000000000000076 /* Sources */ = {isa = PBXSourcesBuildPhase; buildActionMask = 2147483647; files = (); runOnlyForDeploymentPostprocessing = 0; };
-		A10000000000000000000078 /* Sources */ = {isa = PBXSourcesBuildPhase; buildActionMask = 2147483647; files = (); runOnlyForDeploymentPostprocessing = 0; };
+		A10000000000000000000074 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A10000000000000000000076 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A10000000000000000000078 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		A10000000000000000000043 /* PBXTargetDependency */ = {isa = PBXTargetDependency; target = A10000000000000000000011 /* OpsBeacon */; targetProxy = A10000000000000000000041 /* PBXContainerItemProxy */; };
-		A10000000000000000000044 /* PBXTargetDependency */ = {isa = PBXTargetDependency; target = A10000000000000000000011 /* OpsBeacon */; targetProxy = A10000000000000000000042 /* PBXContainerItemProxy */; };
+		A10000000000000000000043 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = A10000000000000000000011 /* OpsBeacon */;
+			targetProxy = A10000000000000000000041 /* PBXContainerItemProxy */;
+		};
+		A10000000000000000000044 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = A10000000000000000000011 /* OpsBeacon */;
+			targetProxy = A10000000000000000000042 /* PBXContainerItemProxy */;
+		};
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
-		A10000000000000000000091 /* Debug */ = {isa = XCBuildConfiguration; buildSettings = { MACOSX_DEPLOYMENT_TARGET = 14.0; SWIFT_VERSION = 6.0; }; name = Debug; };
-		A10000000000000000000092 /* Release */ = {isa = XCBuildConfiguration; buildSettings = { MACOSX_DEPLOYMENT_TARGET = 14.0; SWIFT_VERSION = 6.0; }; name = Release; };
-		A10000000000000000000093 /* Debug */ = {isa = XCBuildConfiguration; buildSettings = { CODE_SIGN_ENTITLEMENTS = OpsBeacon/Resources/OpsBeacon.entitlements; CODE_SIGN_STYLE = Automatic; ENABLE_TESTABILITY = YES; GENERATE_INFOPLIST_FILE = NO; INFOPLIST_FILE = OpsBeacon/Resources/Info.plist; LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks"; MACOSX_DEPLOYMENT_TARGET = 14.0; PRODUCT_BUNDLE_IDENTIFIER = com.opsbeacon.app; PRODUCT_NAME = OpsBeacon; SWIFT_STRICT_CONCURRENCY = complete; SWIFT_VERSION = 6.0; }; name = Debug; };
-		A10000000000000000000094 /* Release */ = {isa = XCBuildConfiguration; buildSettings = { CODE_SIGN_ENTITLEMENTS = OpsBeacon/Resources/OpsBeacon.entitlements; CODE_SIGN_STYLE = Automatic; GENERATE_INFOPLIST_FILE = NO; INFOPLIST_FILE = OpsBeacon/Resources/Info.plist; LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks"; MACOSX_DEPLOYMENT_TARGET = 14.0; PRODUCT_BUNDLE_IDENTIFIER = com.opsbeacon.app; PRODUCT_NAME = OpsBeacon; SWIFT_STRICT_CONCURRENCY = complete; SWIFT_VERSION = 6.0; }; name = Release; };
-		A10000000000000000000095 /* Debug */ = {isa = XCBuildConfiguration; buildSettings = { BUNDLE_LOADER = "$(TEST_HOST)"; GENERATE_INFOPLIST_FILE = YES; PRODUCT_BUNDLE_IDENTIFIER = com.opsbeacon.tests; PRODUCT_NAME = OpsBeaconTests; SWIFT_VERSION = 6.0; TEST_HOST = "$(BUILT_PRODUCTS_DIR)/OpsBeacon.app/Contents/MacOS/OpsBeacon"; }; name = Debug; };
-		A10000000000000000000096 /* Release */ = {isa = XCBuildConfiguration; buildSettings = { BUNDLE_LOADER = "$(TEST_HOST)"; GENERATE_INFOPLIST_FILE = YES; PRODUCT_BUNDLE_IDENTIFIER = com.opsbeacon.tests; PRODUCT_NAME = OpsBeaconTests; SWIFT_VERSION = 6.0; TEST_HOST = "$(BUILT_PRODUCTS_DIR)/OpsBeacon.app/Contents/MacOS/OpsBeacon"; }; name = Release; };
-		A10000000000000000000097 /* Debug */ = {isa = XCBuildConfiguration; buildSettings = { GENERATE_INFOPLIST_FILE = YES; PRODUCT_BUNDLE_IDENTIFIER = com.opsbeacon.uitests; PRODUCT_NAME = OpsBeaconUITests; SWIFT_VERSION = 6.0; TEST_TARGET_NAME = OpsBeacon; }; name = Debug; };
-		A10000000000000000000098 /* Release */ = {isa = XCBuildConfiguration; buildSettings = { GENERATE_INFOPLIST_FILE = YES; PRODUCT_BUNDLE_IDENTIFIER = com.opsbeacon.uitests; PRODUCT_NAME = OpsBeaconUITests; SWIFT_VERSION = 6.0; TEST_TARGET_NAME = OpsBeacon; }; name = Release; };
+		A10000000000000000000091 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				SWIFT_VERSION = 6.0;
+			};
+			name = Debug;
+		};
+		A10000000000000000000092 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				SWIFT_VERSION = 6.0;
+			};
+			name = Release;
+		};
+		A10000000000000000000093 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = OpsBeacon/Resources/OpsBeacon.entitlements;
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = YU7W34A249;
+				ENABLE_TESTABILITY = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = OpsBeacon/Resources/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.opsbeacon.app;
+				PRODUCT_NAME = OpsBeacon;
+				SWIFT_STRICT_CONCURRENCY = complete;
+				SWIFT_VERSION = 6.0;
+			};
+			name = Debug;
+		};
+		A10000000000000000000094 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = OpsBeacon/Resources/OpsBeacon.entitlements;
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = YU7W34A249;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = OpsBeacon/Resources/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.opsbeacon.app;
+				PRODUCT_NAME = OpsBeacon;
+				SWIFT_STRICT_CONCURRENCY = complete;
+				SWIFT_VERSION = 6.0;
+			};
+			name = Release;
+		};
+		A10000000000000000000095 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.opsbeacon.tests;
+				PRODUCT_NAME = OpsBeaconTests;
+				SWIFT_VERSION = 6.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/OpsBeacon.app/Contents/MacOS/OpsBeacon";
+			};
+			name = Debug;
+		};
+		A10000000000000000000096 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.opsbeacon.tests;
+				PRODUCT_NAME = OpsBeaconTests;
+				SWIFT_VERSION = 6.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/OpsBeacon.app/Contents/MacOS/OpsBeacon";
+			};
+			name = Release;
+		};
+		A10000000000000000000097 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GENERATE_INFOPLIST_FILE = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.opsbeacon.uitests;
+				PRODUCT_NAME = OpsBeaconUITests;
+				SWIFT_VERSION = 6.0;
+				TEST_TARGET_NAME = OpsBeacon;
+			};
+			name = Debug;
+		};
+		A10000000000000000000098 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GENERATE_INFOPLIST_FILE = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.opsbeacon.uitests;
+				PRODUCT_NAME = OpsBeaconUITests;
+				SWIFT_VERSION = 6.0;
+				TEST_TARGET_NAME = OpsBeacon;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		A10000000000000000000080 /* Build configuration list for PBXProject "OpsBeacon" */ = {isa = XCConfigurationList; buildConfigurations = (A10000000000000000000091 /* Debug */, A10000000000000000000092 /* Release */); defaultConfigurationIsVisible = 0; defaultConfigurationName = Release; };
-		A10000000000000000000081 /* Build configuration list for PBXNativeTarget "OpsBeacon" */ = {isa = XCConfigurationList; buildConfigurations = (A10000000000000000000093 /* Debug */, A10000000000000000000094 /* Release */); defaultConfigurationIsVisible = 0; defaultConfigurationName = Release; };
-		A10000000000000000000082 /* Build configuration list for PBXNativeTarget "OpsBeaconTests" */ = {isa = XCConfigurationList; buildConfigurations = (A10000000000000000000095 /* Debug */, A10000000000000000000096 /* Release */); defaultConfigurationIsVisible = 0; defaultConfigurationName = Release; };
-		A10000000000000000000083 /* Build configuration list for PBXNativeTarget "OpsBeaconUITests" */ = {isa = XCConfigurationList; buildConfigurations = (A10000000000000000000097 /* Debug */, A10000000000000000000098 /* Release */); defaultConfigurationIsVisible = 0; defaultConfigurationName = Release; };
+		A10000000000000000000080 /* Build configuration list for PBXProject "OpsBeacon" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A10000000000000000000091 /* Debug */,
+				A10000000000000000000092 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A10000000000000000000081 /* Build configuration list for PBXNativeTarget "OpsBeacon" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A10000000000000000000093 /* Debug */,
+				A10000000000000000000094 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A10000000000000000000082 /* Build configuration list for PBXNativeTarget "OpsBeaconTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A10000000000000000000095 /* Debug */,
+				A10000000000000000000096 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A10000000000000000000083 /* Build configuration list for PBXNativeTarget "OpsBeaconUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A10000000000000000000097 /* Debug */,
+				A10000000000000000000098 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		A10000000000000000000020 /* XCRemoteSwiftPackageReference "swift-nio" */ = {isa = XCRemoteSwiftPackageReference; repositoryURL = "https://github.com/apple/swift-nio.git"; requirement = { kind = exactVersion; version = 2.84.0; }; };
+		A10000000000000000000020 /* XCRemoteSwiftPackageReference "swift-nio" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/apple/swift-nio.git";
+			requirement = {
+				kind = exactVersion;
+				version = 2.84.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		A10000000000000000000021 /* NIOCore */ = {isa = XCSwiftPackageProductDependency; package = A10000000000000000000020 /* XCRemoteSwiftPackageReference "swift-nio" */; productName = NIOCore; };
-		A10000000000000000000022 /* NIOPosix */ = {isa = XCSwiftPackageProductDependency; package = A10000000000000000000020 /* XCRemoteSwiftPackageReference "swift-nio" */; productName = NIOPosix; };
-		A10000000000000000000023 /* NIOHTTP1 */ = {isa = XCSwiftPackageProductDependency; package = A10000000000000000000020 /* XCRemoteSwiftPackageReference "swift-nio" */; productName = NIOHTTP1; };
-		A10000000000000000000024 /* NIOFoundationCompat */ = {isa = XCSwiftPackageProductDependency; package = A10000000000000000000020 /* XCRemoteSwiftPackageReference "swift-nio" */; productName = NIOFoundationCompat; };
+		A10000000000000000000021 /* NIOCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A10000000000000000000020 /* XCRemoteSwiftPackageReference "swift-nio" */;
+			productName = NIOCore;
+		};
+		A10000000000000000000022 /* NIOPosix */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A10000000000000000000020 /* XCRemoteSwiftPackageReference "swift-nio" */;
+			productName = NIOPosix;
+		};
+		A10000000000000000000023 /* NIOHTTP1 */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A10000000000000000000020 /* XCRemoteSwiftPackageReference "swift-nio" */;
+			productName = NIOHTTP1;
+		};
+		A10000000000000000000024 /* NIOFoundationCompat */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A10000000000000000000020 /* XCRemoteSwiftPackageReference "swift-nio" */;
+			productName = NIOFoundationCompat;
+		};
 /* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = A10000000000000000000001 /* Project object */;
