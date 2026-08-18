@@ -59,6 +59,7 @@ private struct AlertRow: View {
     var body: some View {
         Text(rowText)
             .font(.system(size: 18))
+            .foregroundStyle(.blue)
             .lineLimit(1)
             .truncationMode(.tail)
             .frame(maxWidth: .infinity, alignment: .leading)
@@ -79,12 +80,12 @@ private struct AlertRow: View {
                     NSPasteboard.general.setString(alert.message, forType: .string)
                 }
             }
-            .accessibilityLabel(Text(verbatim: "\(String(describing: alert.severity)) alert from \(alert.sourceName): \(alert.message)"))
+            .accessibilityLabel(Text(verbatim: "\(String(describing: alert.severity)) : \(alert.message)"))
             .accessibilityHint(Text(verbatim: tooltipText))
     }
 
     private var rowText: String {
-        "\(formatted(alert.occurrenceTime)) · \(alert.sourceName) · \(alert.message)"
+        "\(formatted(alert.occurrenceTime)) · \(alert.message)"
     }
 
     private var tooltipText: String {
