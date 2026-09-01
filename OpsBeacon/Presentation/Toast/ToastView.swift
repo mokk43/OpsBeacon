@@ -59,7 +59,7 @@ private struct AlertRow: View {
     var body: some View {
         Text(rowText)
             .font(.system(size: 18))
-            .foregroundStyle(.blue)
+            .foregroundStyle(Color(red: 0.1, green: 0.1, blue: 0.1))
             .lineLimit(1)
             .truncationMode(.tail)
             .frame(maxWidth: .infinity, alignment: .leading)

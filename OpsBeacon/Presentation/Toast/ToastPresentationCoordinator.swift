@@ -3,6 +3,52 @@ import CoreGraphics
 import SwiftUI
 
 @MainActor
+final class ToastAvailabilityObserver: NSObject {
+    private let applicationNotificationCenter: NotificationCenter
+    private let workspaceNotificationCenter: NotificationCenter
+    private let refreshPresentation: () -> Void
+
+    init(
+        applicationNotificationCenter: NotificationCenter = .default,
+        workspaceNotificationCenter: NotificationCenter = NSWorkspace.shared.notificationCenter,
+        refreshPresentation: @escaping () -> Void
+    ) {
+        self.applicationNotificationCenter = applicationNotificationCenter
+        self.workspaceNotificationCenter = workspaceNotificationCenter
+        self.refreshPresentation = refreshPresentation
+        super.init()
+
+        applicationNotificationCenter.addObserver(
+            self,
+            selector: #selector(availabilityChanged),
+            name: NSApplication.didChangeScreenParametersNotification,
+            object: nil
+        )
+        workspaceNotificationCenter.addObserver(
+            self,
+            selector: #selector(availabilityChanged),
+            name: NSWorkspace.sessionDidBecomeActiveNotification,
+            object: nil
+        )
+        workspaceNotificationCenter.addObserver(
+            self,
+            selector: #selector(availabilityChanged),
+            name: NSWorkspace.screensDidWakeNotification,
+            object: nil
+        )
+    }
+
+    deinit {
+        applicationNotificationCenter.removeObserver(self)
+        workspaceNotificationCenter.removeObserver(self)
+    }
+
+    @objc private func availabilityChanged() {
+        refreshPresentation()
+    }
+}
+
+@MainActor
 public final class ToastPresentationCoordinator {
     private let engine: AlertEngine
     private let configurationStore: any ConfigurationStore
@@ -11,17 +57,20 @@ public final class ToastPresentationCoordinator {
     private var latestSnapshot = AlertSnapshot(state: .init())
     private var observation: Task<Void, Never>?
     private var geometryPersistence: Task<Void, Never>?
+    private var availabilityObserver: ToastAvailabilityObserver?
 
     public init(engine: AlertEngine, configurationStore: any ConfigurationStore) {
         self.engine = engine
         self.configurationStore = configurationStore
-        NotificationCenter.default.addObserver(self, selector: #selector(screensChanged), name: NSApplication.didChangeScreenParametersNotification, object: nil)
+        availabilityObserver = ToastAvailabilityObserver { [weak self] in
+            guard let self else { return }
+            apply(latestSnapshot)
+        }
     }
 
     deinit {
         observation?.cancel()
         geometryPersistence?.cancel()
-        NotificationCenter.default.removeObserver(self)
     }
 
     public func start() {
@@ -51,8 +100,6 @@ public final class ToastPresentationCoordinator {
         panels.removeAll()
         apply(latestSnapshot)
     }
-
-    @objc private func screensChanged() { apply(latestSnapshot) }
 
     private func apply(_ snapshot: AlertSnapshot) {
         latestSnapshot = snapshot
