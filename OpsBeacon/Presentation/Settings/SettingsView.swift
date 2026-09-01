@@ -125,6 +125,7 @@ public final class SettingsViewModel: ObservableObject {
     private var configuration = StoredConfiguration()
     private var configurationApplied: @MainActor (StoredConfiguration) async -> StoredConfiguration = { $0 }
     private var toastGeometryReset: @MainActor () -> Void = {}
+    private var settingsOperationTail: Task<Void, Never>?
 
     public init(configurationStore: any ConfigurationStore, engine: AlertEngine) {
         self.configurationStore = configurationStore
@@ -132,18 +133,15 @@ public final class SettingsViewModel: ObservableObject {
     }
 
     public func load() {
-        Task { [weak self, configurationStore] in
-            guard let self else { return }
-            guard let stored = try? await configurationStore.load() else { return }
-            await MainActor.run {
-                self.configuration = stored
-                self.collectionWindow = stored.settings.collectionWindow
-                self.pushPort = stored.settings.pushPort
-                self.launchAtLogin = stored.settings.launchAtLogin
-                self.sources = stored.alertConfiguration.sources
-                self.rules = stored.alertConfiguration.rules
-                self.sourceIssues = stored.sourceIssues
-            }
+        enqueueOperation { model in
+            guard let stored = try? await model.configurationStore.load() else { return }
+            model.configuration = stored
+            model.collectionWindow = stored.settings.collectionWindow
+            model.pushPort = stored.settings.pushPort
+            model.launchAtLogin = stored.settings.launchAtLogin
+            model.sources = stored.alertConfiguration.sources
+            model.rules = stored.alertConfiguration.rules
+            model.sourceIssues = stored.sourceIssues
         }
     }
 
@@ -156,31 +154,29 @@ public final class SettingsViewModel: ObservableObject {
     }
 
     func saveGeneral() {
-        Task { [weak self] in
-            guard let self else { return }
-            let settings = await MainActor.run { (self.collectionWindow, self.pushPort, self.launchAtLogin, self.configuration) }
+        enqueueOperation { model in
+            let settings = (model.collectionWindow, model.pushPort, model.launchAtLogin, model.configuration)
             guard (1...3_600).contains(settings.0), (1_024...65_535).contains(settings.1) else { return }
             var updated = settings.3
             updated.settings = .init(collectionWindow: settings.0, pushPort: settings.1, launchAtLogin: settings.2)
             updated.alertConfiguration.collectionWindow = settings.0
             do {
                 try await MainActor.run { try LaunchAtLogin.setEnabled(settings.2) }
-                try await self.commit(updated)
+                try await model.commit(updated)
             } catch { }
         }
     }
 
     func addLocalPushSource() {
-        Task { [weak self] in
-            guard let self else { return }
+        enqueueOperation { model in
             let source = AlertSource(name: "Local Push Source", kind: .localPush)
             let credentialStore = KeychainPushCredentialStore()
             do {
                 _ = try await credentialStore.generateAndStoreCredential(for: source.id)
-                var updated = await MainActor.run { self.configuration }
+                var updated = model.configuration
                 updated.alertConfiguration.sources.append(source)
                 updated.pushSources[source.id] = .init(sourceID: source.id, keychainReference: source.id.uuidString)
-                try await self.commit(updated)
+                try await model.commit(updated)
             } catch { }
         }
     }
@@ -195,13 +191,12 @@ public final class SettingsViewModel: ObservableObject {
         do {
             let bookmark = try SecurityScopedLogAccess.createDirectoryBookmark(for: file.deletingLastPathComponent())
             let source = AlertSource(name: file.lastPathComponent, kind: .logFile)
-            Task { [weak self] in
-                guard let self else { return }
-                var updated = await MainActor.run { self.configuration }
+            enqueueOperation { model in
+                var updated = model.configuration
                 updated.alertConfiguration.sources.append(source)
                 updated.logSources[source.id] = .init(sourceID: source.id, directoryBookmark: bookmark, relativePath: file.lastPathComponent, lastResolvedPath: file.path)
                 do {
-                    try await self.commit(updated)
+                    try await model.commit(updated)
                 } catch { }
             }
         } catch { }
@@ -224,15 +219,14 @@ public final class SettingsViewModel: ObservableObject {
     func issues(for sourceID: UUID) -> [SourceIssue] { sourceIssues.filter { $0.sourceID == sourceID } }
 
     func deleteSource(_ sourceID: UUID) {
-        Task { [weak self] in
-            guard let self else { return }
-            var updated = await MainActor.run { self.configuration }
+        enqueueOperation { model in
+            var updated = model.configuration
             updated.alertConfiguration.sources.removeAll { $0.id == sourceID }
             updated.alertConfiguration.rules.removeAll { $0.sourceID == sourceID }
             updated.logSources.removeValue(forKey: sourceID)
             updated.pushSources.removeValue(forKey: sourceID)
             do {
-                try await self.commit(updated)
+                try await model.commit(updated)
                 let credentialStore = KeychainPushCredentialStore()
                 try? await credentialStore.deleteCredential(for: sourceID)
             } catch { }
@@ -240,24 +234,23 @@ public final class SettingsViewModel: ObservableObject {
     }
 
     private func setSource(_ sourceID: UUID, enabled: Bool) {
-        Task { [weak self] in
-            guard let self else { return }
-            var updated = await MainActor.run { self.configuration }
+        enqueueOperation { model in
+            var updated = model.configuration
             guard let index = updated.alertConfiguration.sources.firstIndex(where: { $0.id == sourceID }) else { return }
             updated.alertConfiguration.sources[index].enabled = enabled
             do {
-                try await self.commit(updated)
+                try await model.commit(updated)
             } catch { }
         }
     }
 
     private func setSource(_ sourceID: UUID, name: String) {
-        Task { [weak self] in
-            guard let self, !name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else { return }
-            var updated = await MainActor.run { self.configuration }
+        enqueueOperation { model in
+            guard !name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else { return }
+            var updated = model.configuration
             guard let index = updated.alertConfiguration.sources.firstIndex(where: { $0.id == sourceID }) else { return }
             updated.alertConfiguration.sources[index].name = name
-            try? await self.commit(updated)
+            try? await model.commit(updated)
         }
     }
 
@@ -270,15 +263,14 @@ public final class SettingsViewModel: ObservableObject {
         guard panel.runModal() == .OK, let file = panel.url else { return }
         do {
             let bookmark = try SecurityScopedLogAccess.createDirectoryBookmark(for: file.deletingLastPathComponent())
-            Task { [weak self] in
-                guard let self else { return }
-                var updated = await MainActor.run { self.configuration }
+            enqueueOperation { model in
+                var updated = model.configuration
                 guard var logSource = updated.logSources[sourceID] else { return }
                 logSource.directoryBookmark = bookmark
                 logSource.relativePath = file.lastPathComponent
                 logSource.lastResolvedPath = file.path
                 updated.logSources[sourceID] = logSource
-                try? await self.commit(updated)
+                try? await model.commit(updated)
             }
         } catch { }
     }
@@ -304,45 +296,40 @@ public final class SettingsViewModel: ObservableObject {
     }
 
     func regeneratePushCredential(_ sourceID: UUID) {
-        Task { [weak self] in
-            guard let self else { return }
+        enqueueOperation { model in
             guard (try? await KeychainPushCredentialStore().generateAndStoreCredential(for: sourceID)) != nil else { return }
-            let current = await MainActor.run { self.configuration }
-            let reconciled = await self.configurationApplied(current)
-            await MainActor.run { self.configuration = reconciled; self.sourceIssues = reconciled.sourceIssues }
+            try? await model.commit(model.configuration)
         }
     }
 
     func clearIssue(_ issueID: UUID) {
-        Task { [weak self] in
-            guard let self else { return }
-            guard var updated = try? await configurationStore.load(), let index = updated.sourceIssues.firstIndex(where: { $0.id == issueID }) else { return }
+        enqueueOperation { model in
+            guard var updated = try? await model.configurationStore.load(), let index = updated.sourceIssues.firstIndex(where: { $0.id == issueID }) else { return }
             updated.sourceIssues[index].resolved = true
-            guard (try? await configurationStore.save(updated)) != nil else { return }
-            await MainActor.run { self.configuration = updated; self.sourceIssues = updated.sourceIssues }
+            guard (try? await model.configurationStore.save(updated)) != nil else { return }
+            model.configuration = updated
+            model.sourceIssues = updated.sourceIssues
         }
     }
 
     func addRule(kind: SourceKind) {
-        Task { [weak self] in
-            guard let self else { return }
-            var updated = await MainActor.run { self.configuration }
+        enqueueOperation { model in
+            var updated = model.configuration
             guard let source = updated.alertConfiguration.sources.first(where: { $0.kind == kind }) else { return }
             let nextOrder = (updated.alertConfiguration.rules.filter { $0.sourceID == source.id }.map(\.order).max() ?? -1) + 1
             let matcher: RuleMatcher = kind == .logFile
                 ? .log(.contains("", caseSensitive: false))
                 : .push(name: nil, conditions: [])
             updated.alertConfiguration.rules.append(.init(sourceID: source.id, name: "New Rule", order: nextOrder, matcher: matcher))
-            try? await self.commit(updated)
+            try? await model.commit(updated)
         }
     }
 
     func deleteRule(_ ruleID: UUID) {
-        Task { [weak self] in
-            guard let self else { return }
-            var updated = await MainActor.run { self.configuration }
+        enqueueOperation { model in
+            var updated = model.configuration
             updated.alertConfiguration.rules.removeAll { $0.id == ruleID }
-            try? await self.commit(updated)
+            try? await model.commit(updated)
         }
     }
 
@@ -362,24 +349,22 @@ public final class SettingsViewModel: ObservableObject {
     }
 
     func moveRules(from offsets: IndexSet, to destination: Int) {
-        Task { [weak self] in
-            guard let self else { return }
-            var updated = await MainActor.run { self.configuration }
+        enqueueOperation { model in
+            var updated = model.configuration
             var reordered = updated.alertConfiguration.rules
             reordered.move(fromOffsets: offsets, toOffset: destination)
             for index in reordered.indices { reordered[index].order = index }
             updated.alertConfiguration.rules = reordered
-            try? await self.commit(updated)
+            try? await model.commit(updated)
         }
     }
 
     private func setRule(_ ruleID: UUID, change: @escaping (inout Rule) -> Void) {
-        Task { [weak self] in
-            guard let self else { return }
-            var updated = await MainActor.run { self.configuration }
+        enqueueOperation { model in
+            var updated = model.configuration
             guard let index = updated.alertConfiguration.rules.firstIndex(where: { $0.id == ruleID }) else { return }
             change(&updated.alertConfiguration.rules[index])
-            try? await self.commit(updated)
+            try? await model.commit(updated)
         }
     }
 
@@ -389,18 +374,25 @@ public final class SettingsViewModel: ObservableObject {
     }
 
     func resetToastGeometry() {
-        Task { [weak self] in
-            guard let self else { return }
+        enqueueOperation { model in
             do {
-                var updated = try await configurationStore.load()
+                var updated = try await model.configurationStore.load()
                 updated.displayGeometries.removeAll()
-                try await configurationStore.save(updated)
-                await MainActor.run {
-                    self.configuration = updated
-                    self.toastGeometryReset()
-                }
+                try await model.configurationStore.save(updated)
+                model.configuration = updated
+                model.toastGeometryReset()
             } catch { }
         }
+    }
+
+    private func enqueueOperation(_ operation: @escaping @MainActor (SettingsViewModel) async -> Void) {
+        let predecessor = settingsOperationTail
+        let queued = Task { @MainActor [weak self] in
+            await predecessor?.value
+            guard let self else { return }
+            await operation(self)
+        }
+        settingsOperationTail = queued
     }
 
     private func commit(_ requested: StoredConfiguration) async throws {

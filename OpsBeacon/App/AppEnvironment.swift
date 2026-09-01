@@ -13,15 +13,13 @@ final class AppEnvironment: NSObject {
     private let alertStore: any AlertStore
     private let credentialStore: any PushCredentialStore
     let engine: AlertEngine
-    private let pushRegistry: PushRouteRegistry
-    private let pushListener: LocalPushHTTPListener
+    private let pushRuntime: LocalPushRuntime
     private let toastCoordinator: ToastPresentationCoordinator
     private var statusItem: StatusItemController?
     private var settingsWindow: NSWindow?
     private var snapshotTask: Task<Void, Never>?
     private var sourceSupervisor: SourceSupervisor?
     private var monitoringPaused = false
-    private var activePushPort: Int?
     private var hasUnresolvedIssues = false
 
     override init() {
@@ -32,10 +30,10 @@ final class AppEnvironment: NSObject {
         } catch {
             fatalError("OpsBeacon could not initialize its durable Alert store: \(error.localizedDescription)")
         }
-        engine = AlertEngine(store: alertStore)
+        let engine = AlertEngine(store: alertStore)
+        self.engine = engine
         credentialStore = KeychainPushCredentialStore()
-        pushRegistry = PushRouteRegistry(engine: engine)
-        pushListener = LocalPushHTTPListener(registry: pushRegistry)
+        pushRuntime = LocalPushRuntime(engine: engine)
         toastCoordinator = ToastPresentationCoordinator(engine: engine, configurationStore: configurationStore)
         super.init()
     }
@@ -50,7 +48,7 @@ final class AppEnvironment: NSObject {
                 try await engine.applyConfiguration(configuration)
                 let recovered = try await engine.start()
                 do {
-                    try await self.startPushListener(using: stored)
+                    try await self.applyPushConfiguration(using: stored)
                 } catch {
                     self.latchListenerFailure(error.localizedDescription, in: &stored)
                     try? await configurationStore.save(stored)
@@ -110,7 +108,7 @@ final class AppEnvironment: NSObject {
         await supervisor.reconcile(enabledSources: stored.alertConfiguration.sources.filter { $0.kind == .logFile }, monitoringPaused: monitoringPaused)
     }
 
-    private func startPushListener(using stored: StoredConfiguration) async throws {
+    private func applyPushConfiguration(using stored: StoredConfiguration) async throws {
         var routes: [PushRoute] = []
         for source in stored.alertConfiguration.sources where source.kind == .localPush {
             guard let push = stored.pushSources[source.id],
@@ -118,24 +116,18 @@ final class AppEnvironment: NSObject {
             _ = push // The reference is intentionally not exposed outside the persistence boundary.
             routes.append(.init(sourceID: source.id, enabled: source.enabled, credential: credential))
         }
-        await pushRegistry.configure(routes: routes, port: stored.settings.pushPort, ready: false)
-        try await pushListener.start(port: stored.settings.pushPort)
-        activePushPort = stored.settings.pushPort
-        await pushRegistry.configure(routes: routes, port: stored.settings.pushPort, ready: true)
+        try await pushRuntime.apply(.init(port: stored.settings.pushPort, routes: routes))
     }
 
     private func reconcileRuntimes(using stored: StoredConfiguration) async -> StoredConfiguration {
         var reconciled = stored
-        await pushListener.stop()
-        do { try await startPushListener(using: stored) }
+        do { try await applyPushConfiguration(using: stored) }
         catch {
             let detail = error.localizedDescription
             logger.error("Local Push listener could not be reconfigured: \(detail, privacy: .public)")
             latchListenerFailure(detail, in: &reconciled)
-            if let activePushPort, activePushPort != stored.settings.pushPort {
-                reconciled.settings.pushPort = activePushPort
-                do { try await startPushListener(using: reconciled) }
-                catch { logger.error("Local Push listener could not restore its previous port: \(error.localizedDescription, privacy: .public)") }
+            if let active = await pushRuntime.activeConfiguration() {
+                reconciled.settings.pushPort = active.port
             }
             try? await configurationStore.save(reconciled)
         }

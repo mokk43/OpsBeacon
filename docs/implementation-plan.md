@@ -144,8 +144,8 @@ Interface guarantees:
 - `AlertEngine` alone owns ordered Rule evaluation, Monitoring Pause, Collection Window timing, overflow accounting, Acknowledgement, recovery, and durable Alert transitions.
 - Rule matching and clock handling are private/internal seams exercised through the same Interface; they are not public coordinator Modules.
 - `AlertStore` is a real persistence seam because production uses a SwiftData Adapter and tests use an in-memory Adapter. It loads and atomically saves complete engine state without exposing SwiftData records.
-- `SourceSupervisor` owns runtime start/stop/reconfiguration and Source health, but never owns pause or Alert semantics.
-- Configuration edits are persisted first, then applied to `AlertEngine`, then reconciled by `SourceSupervisor`; Settings reports success only after all three steps complete. A runtime-start failure leaves the configuration durable and creates a Source Issue rather than rolling back silently.
+- `SourceSupervisor` owns per-Source Log runtime start/stop/reconfiguration and Source health. `LocalPushRuntime` owns the one app-wide Local Push listener plus its route and port transitions. Neither owns pause or Alert semantics.
+- Configuration edits are persisted first, then applied to `AlertEngine`, then reconciled by the corresponding runtime owner; Settings reports success only after all three steps complete. A runtime-start failure leaves the configuration durable and creates a Source Issue rather than rolling back silently.
 - Every Source runtime awaits `ingest` before submitting its next Signal; it does not create detached, unbounded ingestion tasks.
 - `ToastPresentationCoordinator` is `@MainActor` and is the only owner of `NSPanel` instances.
 - No file, socket, matching, or persistence work runs on the main actor.
