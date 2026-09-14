@@ -4,6 +4,36 @@ import SwiftUI
 @MainActor
 final class ToastPanel: NSPanel {
     var frameDidChange: ((NSRect) -> Void)?
+    var acknowledge: (() -> Void)?
+
+    func pointerHoverChanged(_ isInside: Bool) {
+        if isInside {
+            makeKey()
+        } else if isKeyWindow {
+            resignKey()
+        }
+    }
+
+    func acknowledgeIfEligible(_ event: NSEvent, mouseLocation: NSPoint) -> Bool {
+        guard isVisible, frame.contains(mouseLocation), event.type == .keyDown,
+              event.keyCode == 36 || event.keyCode == 76,
+              event.modifierFlags.intersection([.command, .control, .option, .shift]).isEmpty,
+              let acknowledge else { return false }
+        // Consume repeats without acknowledging a newly displayed batch.
+        if !event.isARepeat { acknowledge() }
+        return true
+    }
+
+    override func performKeyEquivalent(with event: NSEvent) -> Bool {
+        acknowledgeIfEligible(event, mouseLocation: NSEvent.mouseLocation)
+            || super.performKeyEquivalent(with: event)
+    }
+
+    override func keyDown(with event: NSEvent) {
+        if !acknowledgeIfEligible(event, mouseLocation: NSEvent.mouseLocation) {
+            super.keyDown(with: event)
+        }
+    }
 
     init(frame: NSRect) {
         super.init(

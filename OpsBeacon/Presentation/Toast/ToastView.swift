@@ -4,6 +4,7 @@ import SwiftUI
 struct ToastView: View {
     let snapshot: AlertSnapshot
     let acknowledge: () -> Void
+    let hoverChanged: (Bool) -> Void
 
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
@@ -28,12 +29,13 @@ struct ToastView: View {
                 Button("Acknowledge", action: acknowledge)
                     .scaleEffect(1.2)
                     .padding(.vertical, 2)
-                    .keyboardShortcut(.defaultAction)
                     .accessibilityLabel("Acknowledge all displayed alerts")
             }
         }
         .padding(14)
         .background(.regularMaterial)
+        .contentShape(Rectangle())
+        .onHover(perform: hoverChanged)
     }
 
     private var severityLabel: String { snapshot.highestSeverity.map { "\($0)" } ?? "no" }

@@ -115,13 +115,24 @@ public final class ToastPresentationCoordinator {
             panels.removeValue(forKey: id)
         }
         for screen in active {
-            let restored = geometryByDisplayUUID[screen.uuid]?.frame ?? DisplayGeometryMath.defaultFrame(in: screen.visibleFrame)
-            let panel = panels[screen.id] ?? ToastPanel(frame: restored)
+            let savedSize = geometryByDisplayUUID[screen.uuid]?.frame.size ?? CGSize(width: 520, height: 360)
+            let panel = panels[screen.id] ?? ToastPanel(
+                frame: DisplayGeometryMath.defaultFrame(in: screen.visibleFrame, size: savedSize)
+            )
+            // Recenter each new popup; preserve user placement while it stays open.
+            let targetFrame = panel.isVisible
+                ? DisplayGeometryMath.clamped(panel.frame, into: screen.visibleFrame)
+                : DisplayGeometryMath.defaultFrame(in: screen.visibleFrame, size: panel.frame.size)
             panel.frameDidChange = { [weak self, id = screen.id, uuid = screen.uuid, visibleFrame = screen.visibleFrame] frame in
                 self?.remember(frame: frame, for: id, uuid: uuid, visibleFrame: visibleFrame)
             }
-            panel.contentView = NSHostingView(rootView: ToastView(snapshot: snapshot, acknowledge: { [weak self] in self?.acknowledge() }))
-            panel.setFrame(DisplayGeometryMath.clamped(panel.frame, into: screen.visibleFrame), display: true)
+            panel.acknowledge = { [weak self] in self?.acknowledge() }
+            panel.contentView = NSHostingView(rootView: ToastView(
+                snapshot: snapshot,
+                acknowledge: { [weak panel] in panel?.acknowledge?() },
+                hoverChanged: { [weak panel] in panel?.pointerHoverChanged($0) }
+            ))
+            panel.setFrame(targetFrame, display: true)
             if panels[screen.id] == nil {
                 panels[screen.id] = panel
             }

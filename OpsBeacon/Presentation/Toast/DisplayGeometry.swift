@@ -2,12 +2,10 @@ import CoreGraphics
 
 public enum DisplayGeometryMath {
     public static func defaultFrame(in visibleFrame: CGRect, size: CGSize = .init(width: 520, height: 360)) -> CGRect {
-        CGRect(
-            x: visibleFrame.maxX - size.width - 16,
-            y: visibleFrame.maxY - size.height - 16,
-            width: min(size.width, visibleFrame.width),
-            height: min(size.height, visibleFrame.height)
-        )
+        var frame = clamped(CGRect(origin: visibleFrame.origin, size: size), into: visibleFrame)
+        frame.origin.x = visibleFrame.midX - frame.width / 2
+        frame.origin.y = max(visibleFrame.minY, visibleFrame.maxY - frame.height - 16)
+        return frame
     }
 
     public static func clamped(_ frame: CGRect, into visibleFrame: CGRect, minimumSize: CGSize = .init(width: 320, height: 180)) -> CGRect {

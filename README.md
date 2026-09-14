@@ -12,6 +12,8 @@ swift run OpsBeaconApp
 
 Both project files pin SwiftNIO to `2.84.0`. The package command builds the same source tree for fast local verification; the Xcode application target is the release artifact and applies `OpsBeacon.entitlements` plus the accessory-app `Info.plist`.
 
+Each new alert popup appears at the top center of every active display, 16 points below its usable top edge. Popup sizes are remembered per display; dragging an open popup keeps its position until it is acknowledged.
+
 The application runs as an accessory menu-bar utility—quitting it is explicit from the status menu. Its Alert state uses SwiftData when available; configuration, source metadata, and display geometry are kept in Application Support. Push Credentials are held only in Keychain.
 
 ## Local Push contract
